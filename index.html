@@ -279,6 +279,33 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--ink)}
 .retry{font-size:13px;margin:8px 0 0}
 .nosr{font-size:13px;color:var(--ink-2);text-align:center;margin:0 0 8px}
 
+/* ── アカウント ── */
+.acc-hint{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--ink);border-radius:var(--r-lg);padding:14px 18px;margin:-16px 0 30px;font-size:14px}
+.acc-hint p{margin:0}
+.acc-hint .btn{min-height:40px;padding:0 18px;font-size:13px;flex:none}
+.acc-hint .x2{border:0;background:transparent;width:40px;height:40px;font-size:14px;color:var(--ink-3);flex:none}
+.acc-head{padding:16px 0 4px}
+.acc-head b{font-size:16px}
+.acc-head p{margin:2px 0 0;font-size:13px;color:var(--ink-2)}
+.acc-tabs{margin:12px 0 0}
+.acc-form{padding:4px 0 18px}
+.acc-form label{display:block;font-size:13px;margin:12px 0 0;color:var(--ink-2)}
+.acc-form input[type=email],.acc-form input[type=password]{display:block;width:100%;margin-top:6px;border:1px solid var(--ink);background:var(--canvas);color:var(--ink);border-radius:var(--pill);padding:12px 18px;font:inherit;font-size:16px;outline:none}
+.acc-form label.check{display:flex;gap:10px;align-items:flex-start;line-height:1.6}
+.acc-form label.check input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--ink);flex:none}
+.acc-form .btn{margin-top:16px;width:100%}
+.acc-note{font-size:12px;color:var(--ink-3);margin:12px 0 0;line-height:1.7}
+.acc-note a,.acc-off a,.help a{color:inherit}
+.acc-msg{font-size:13px;font-weight:700;margin-top:10px;min-height:1em}
+.acc-msg:empty{display:none}
+#ts{margin-top:14px;min-height:65px}
+.acc-off{font-size:13px;color:var(--ink-2);margin:0 0 16px}
+.srow .btn{white-space:nowrap;flex:none;min-height:44px;padding:0 18px;font-size:14px}
+.taikai-box{display:flex;gap:8px;margin-top:10px}
+.taikai-box input{flex:1;min-width:0;border:1px solid var(--ink);background:var(--canvas);color:var(--ink);border-radius:var(--pill);padding:10px 16px;font:inherit}
+.help h3{font-size:14px;margin:22px 0 4px;color:var(--ink)}
+.help ul{margin:0;padding-left:1.2em}
+
 @media (max-width:560px){
   .hero{grid-template-columns:1fr;padding:26px}
   .ring{position:absolute;right:18px;top:18px;width:92px;height:92px}
@@ -338,6 +365,12 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--ink)}
       <div class="stat"><span>累計正答率</span><b id="stAcc">–<small> %</small></b></div>
     </div>
 
+    <div class="acc-hint" id="accHint" hidden>
+      <p>アカウントを作ると、スマホとパソコンで記録を共有できます。</p>
+      <button class="btn" id="accHintGo">作る</button>
+      <button class="x2" id="accHintOff" aria-label="閉じる">✕</button>
+    </div>
+
     <h2 class="sec">学ぶ</h2>
     <p class="due-note" id="dueNote"></p>
     <div class="chips" id="typeChips">
@@ -389,6 +422,8 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--ink)}
 
   <!-- SETTINGS -->
   <section class="view" id="v-settings">
+    <div class="set" id="accBox" hidden></div>
+    <p class="acc-off" id="accOff" hidden></p>
     <div class="set">
       <div class="srow"><div>自動で発音する<p>問題が出たとき、英語を読み上げます</p></div><button class="toggle" id="tgSpeak"></button></div>
       <div class="srow"><div>1日の目標<p>ホームの「今日の回答」の目標数</p></div>
@@ -409,7 +444,16 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--ink)}
       <p><b>習得までの流れ</b> 1つの語には5段階の「覚え具合」があり、正解するたびに1段上がります。4段目で「習得」です。上がるほど次に出てくるまでの間隔が 1日 → 2日 → 4日 → 8日 → 16日 と空いていきます（忘れかけたころに復習する、という覚え方です）。まちがえると最初の段に戻ります。</p>
       <p><b>出題の順番</b> 復習の時期が来た語 → 新しい語（1回4語まで）→ 覚え具合が低い語 の順で出ます。まちがえた語は、その回の最後にもう一度出ます。</p>
       <p><b>発音練習</b> マイクに向かって英語を読むと、ブラウザの聞き取り機能が文字に起こし、お手本と比べます。全部の語が聞き取られたら「ぴったり」（+15 XP）、4分の3以上なら「通じます」（+10 XP）。1語につき3回まで挑戦できます。発音練習は「覚え具合」には影響しません。聞き取りは Chrome・Edge・Safari で使えます（声はブラウザの会社のサーバーで文字に起こされます）。使えないブラウザでは、お手本を聞いて自分で判定する形になります。</p>
+      <p><b>アカウント</b> 登録すると、学習記録がサーバーにも保存され、別の端末でログインすると同じ記録で続けられます。記録は練習の区切りと、画面を閉じたときに保存します。両方の端末で進めた場合は、語ごとに練習量の多いほうを残してまとめます。</p>
       <p><b>記録の保存</b> この端末のブラウザの中だけに保存されます。ブラウザの履歴を消すと記録も消えるので、ときどき「書き出す」でバックアップしてください。</p>
+      <h3 id="privacy">個人情報の扱い</h3>
+      <ul>
+        <li><b>集めるもの</b> メールアドレス、パスワード、学習記録。パスワードはそのままでは保存せず、元に戻せない形に変えて保存します。</li>
+        <li><b>使い道</b> ログインと、端末をまたいだ学習記録の引き継ぎに使います。お知らせメールの受け取りを選んだ方には、新しい教材やアプリのお知らせを送ることがあります（いつでも設定で止められます）。</li>
+        <li><b>渡さない</b> 法令に基づく場合を除き、第三者には渡しません。</li>
+        <li><b>消す</b> 退会すると、アカウントとサーバー上の学習記録をすぐに削除します。</li>
+        <li><b>お問い合わせ</b> <a href="https://bitshowroom.com/#otayori">ビットのショールームのお便り箱</a>から。</li>
+      </ul>
     </div>
   </section>
 </div>
@@ -597,7 +641,7 @@ function load(){
   }catch(e){}
   return defaultState();
 }
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} if(typeof ACC!=='undefined' && ACC.user) markDirty(); }
 
 const todayStr = () => { const d=new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; };
 const rec = id => S.items[id] || (S.items[id] = {box:0,due:0,seen:false,c:0,w:0});
@@ -1089,6 +1133,7 @@ function finish(){
   const answered = g.correct+g.wrong;
   if(answered && g.wrong===0 && answered>=5 && !S.ach.includes('perfect')){ S.ach.push('perfect'); toast('実績を解除 <b>★ 満点</b>'); }
   save();
+  pushNow();   // 練習の区切りでサーバーにも保存
   const rate = answered ? g.correct/answered : 0;
   const msg = !answered ? 'またいつでもどうぞ。' : rate===1 ? '完璧です。この調子で一段ずつ。' : rate>=.7 ? (g.mode==='speak' ? 'いい流れです。言えなかった語は、次の発音練習で先に出ます。' : 'いい流れです。まちがえた語は明日また出ます。') : '出会ったばかりの語は、まちがえて当然。くり返すほど残ります。';
   const L=levelFromXp(S.xp);
@@ -1185,6 +1230,7 @@ function applyTheme(){
   else document.documentElement.setAttribute('data-theme',t);
 }
 function renderSettings(){
+  renderAcc();
   $('#tgSpeak').classList.toggle('on',S.settings.speak);
   $('#selGoal').value=S.settings.goal;
   $('#selSize').value=S.settings.size;
@@ -1196,7 +1242,7 @@ $('#selSize').addEventListener('change',e=>{ S.settings.size=+e.target.value; sa
 $('#selTheme').addEventListener('change',e=>{ S.settings.theme=e.target.value; save(); applyTheme(); });
 $('#btnReset').addEventListener('click',()=>{
   if(confirm('レベル・習得状況・実績をすべて消します。よろしいですか？')){
-    const keep=S.settings; S=defaultState(); S.settings=keep; save(); toast('記録をリセットしました'); show('home');
+    const keep=S.settings; S=defaultState(); S.settings=keep; save(); pushNow(); toast('記録をリセットしました'); show('home');
   }
 });
 $('#btnExport').addEventListener('click',()=>{
@@ -1211,13 +1257,211 @@ $('#fileImport').addEventListener('change',async e=>{
     const d=JSON.parse(await f.text());
     if(typeof d.xp!=='number'||typeof d.items!=='object') throw 0;
     S={...defaultState(),...d,settings:{...defaultState().settings,...(d.settings||{})}};
-    save(); applyTheme(); toast('記録を読み込みました'); show('home');
+    save(); pushNow(); applyTheme(); toast('記録を読み込みました'); show('home');
   }catch(err){ toast('このファイルは読み込めませんでした'); }
   e.target.value='';
 });
 
+/* ===================== ACCOUNT ===================== */
+/* bitshowroom.com 版だけで動く。GitHub Pages 版やファイルを直接開いたときは隠す */
+var ACC = { available:false, user:null, dirty:false, timer:null, lastSync:null, form:'login', ts:null, tsId:null, taikai:false };
+const TS_SITEKEY = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) ? '1x00000000000000000000AA' : '0x4AAAAAAETaN2OnLK_QYB9i';
+
+async function api(path, method='GET', body, keepalive=false){
+  const headers = method==='GET' ? {} : {'x-vl':'1'};
+  if(body!==undefined) headers['content-type']='application/json';
+  const r = await fetch('/api/vl/'+path, {method, headers, credentials:'same-origin', keepalive, body: body!==undefined ? JSON.stringify(body) : undefined});
+  let j=null; try{ j=await r.json(); }catch(e){}
+  return {status:r.status, ok:!!(r.ok && j && j.ok), j:j||{}};
+}
+
+/* 2つの記録をまとめる：語ごとに練習量の多いほう、数字は大きいほう、実績は両方 */
+function mergeState(a, b){
+  if(!b) return a;
+  const d=defaultState(), m={...d, ...b, ...a, settings:{...d.settings, ...(a.settings||{})}};
+  m.xp=Math.max(a.xp||0, b.xp||0);
+  m.items={};
+  const amount = r => r ? (r.c||0)+(r.w||0)+(r.p||0)+(r.seen?1:0) : -1;
+  for(const id of new Set([...Object.keys(a.items||{}), ...Object.keys(b.items||{})])){
+    const ra=(a.items||{})[id], rb=(b.items||{})[id];
+    const pick = amount(ra)>amount(rb) || (amount(ra)===amount(rb) && (ra?.box||0)>=(rb?.box||0)) ? ra : rb;
+    m.items[id]={...pick, p:Math.max(ra?.p||0, rb?.p||0)};
+  }
+  m.ach=[...new Set([...(a.ach||[]), ...(b.ach||[])])];
+  m.totals={correct:Math.max(a.totals?.correct||0,b.totals?.correct||0), wrong:Math.max(a.totals?.wrong||0,b.totals?.wrong||0)};
+  const dayNum = s => { if(!s) return 0; const [y,mo,da]=s.split('-').map(Number); return new Date(y,mo-1,da).getTime(); };
+  const sa=a.streak||d.streak, sb=b.streak||d.streak;
+  m.streak = dayNum(sa.last)>dayNum(sb.last) ? sa : dayNum(sb.last)>dayNum(sa.last) ? sb : {last:sa.last, count:Math.max(sa.count||0,sb.count||0)};
+  const ta=a.today||d.today, tb=b.today||d.today;
+  m.today = ta.date===tb.date ? {date:ta.date, n:Math.max(ta.n||0,tb.n||0)} : (ta.date===todayStr() ? ta : tb.date===todayStr() ? tb : ta);
+  return m;
+}
+
+function markDirty(){
+  ACC.dirty=true;
+  clearTimeout(ACC.timer);
+  ACC.timer=setTimeout(()=>pushNow(), 20000);
+}
+async function pushNow(keepalive=false){
+  if(!ACC.user || !ACC.dirty) return;
+  ACC.dirty=false; clearTimeout(ACC.timer);
+  try{
+    const r=await api('kiroku','PUT',{data:S},keepalive);
+    if(r.ok){ ACC.lastSync=new Date(); }
+    else if(r.status===401){ ACC.user=null; toast('ログインが切れました。設定からログインし直してください'); }
+    else ACC.dirty=true;
+  }catch(e){ ACC.dirty=true; }
+  updateSyncLine();
+}
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') pushNow(true); });
+window.addEventListener('pagehide',()=>pushNow(true));
+
+/* サーバーの記録を受け取ったら、この端末の記録とまとめて、まとめた結果を預け直す */
+function applyServer(j){
+  ACC.user={email:j.email, oshirase:!!j.oshirase}; ACC.taikai=false;
+  if(j.data){ S=mergeState(S, j.data); }
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  ACC.dirty=true; pushNow();
+  applyTheme(); renderHome();
+}
+
+async function accInit(){
+  if(location.protocol==='file:') return accOffNote();
+  try{
+    const r=await api('me');
+    if(r.status===200 && r.ok){ ACC.available=true; applyServer(r.j); }
+    else if(r.status===401){ ACC.available=true; }
+    else return accOffNote(r.status===503 ? r.j.riyuu : null);
+  }catch(e){ return accOffNote(); }
+  renderHome(); if($('#v-settings').classList.contains('on')) renderAcc();
+}
+function accOffNote(msg){
+  ACC.available=false;
+  const el=$('#accOff');
+  el.innerHTML = msg ? esc(msg) : 'アカウント（スマホとパソコンで記録を共有する機能）は <a href="https://bitshowroom.com/vocab-ladder/">bitshowroom.com 版</a> で使えます。';
+  el.hidden=false;
+}
+
+const hintOff = () => { try{ return localStorage.getItem('vl-acc-hint-off')==='1'; }catch(e){ return false; } };
+const _renderHome = renderHome;
+renderHome = function(){
+  _renderHome();
+  const h=$('#accHint'); if(h) h.hidden = !(ACC.available && !ACC.user && !hintOff());
+};
+$('#accHintGo').addEventListener('click',()=>{ ACC.form='signup'; show('settings'); });
+$('#accHintOff').addEventListener('click',()=>{ try{ localStorage.setItem('vl-acc-hint-off','1'); }catch(e){} $('#accHint').hidden=true; });
+
+function updateSyncLine(){
+  const el=$('#accSync'); if(!el) return;
+  el.textContent = ACC.lastSync ? `最後に保存：${ACC.lastSync.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'})}` + (ACC.dirty?'（未保存の変更あり）':'') : (ACC.dirty ? '未保存の変更あり' : 'まだ保存していません');
+}
+
+function renderAcc(){
+  const box=$('#accBox');
+  if(!ACC.available){ box.hidden=true; return; }
+  box.hidden=false; $('#accOff').hidden=true;
+  if(ACC.user){
+    box.innerHTML = `
+      <div class="srow"><div>アカウント<p>${esc(ACC.user.email)} でログイン中</p></div><button class="btn ghost" id="accLogout">ログアウト</button></div>
+      <div class="srow"><div>記録の同期<p id="accSync"></p></div><button class="btn ghost" id="accSyncNow">今すぐ保存</button></div>
+      <div class="srow"><div>お知らせメール<p>新しい教材やアプリのお知らせを受け取る</p></div><button class="toggle ${ACC.user.oshirase?'on':''}" id="accOshirase" aria-label="お知らせメール"></button></div>
+      <div class="srow" style="display:block"><div style="display:flex;justify-content:space-between;align-items:center;gap:14px"><div>退会<p>アカウントとサーバーの学習記録を削除します（この端末の記録は残ります）</p></div>${ACC.taikai?'':'<button class="btn ghost" id="accTaikai">退会する</button>'}</div>
+        ${ACC.taikai?`<form class="taikai-box" id="taikaiForm"><input type="password" id="taikaiPw" placeholder="確認のためパスワード" autocomplete="current-password"><button class="btn red">削除する</button></form><div class="acc-msg" id="accMsg"></div>`:''}
+      </div>`;
+    updateSyncLine();
+    $('#accLogout').addEventListener('click',async()=>{
+      await pushNow();
+      try{ await api('logout','POST'); }catch(e){}
+      ACC.user=null; ACC.taikai=false; renderAcc(); renderHome(); toast('ログアウトしました。この端末の記録はそのまま残ります');
+    });
+    $('#accSyncNow').addEventListener('click',async()=>{ ACC.dirty=true; await pushNow(); toast(ACC.dirty?'保存できませんでした。通信を確かめてください':'サーバーに保存しました'); });
+    $('#accOshirase').addEventListener('click',async e=>{
+      const want=!ACC.user.oshirase;
+      const r=await api('oshirase','POST',{oshirase:want}).catch(()=>({ok:false}));
+      if(r.ok){ ACC.user.oshirase=want; e.target.classList.toggle('on',want); } else toast('変更できませんでした');
+    });
+    if(ACC.taikai){
+      $('#taikaiForm').addEventListener('submit',async e=>{
+        e.preventDefault();
+        const r=await api('taikai','POST',{password:$('#taikaiPw').value}).catch(()=>({ok:false,j:{}}));
+        if(r.ok){ ACC.user=null; ACC.taikai=false; renderAcc(); renderHome(); toast('退会しました。サーバーの記録を削除しました'); }
+        else $('#accMsg').textContent='✕ '+(r.j.riyuu||'通信できませんでした');
+      });
+      setTimeout(()=>$('#taikaiPw').focus(),50);
+    }else{
+      $('#accTaikai').addEventListener('click',()=>{ ACC.taikai=true; renderAcc(); });
+    }
+    return;
+  }
+  const signup = ACC.form==='signup';
+  box.innerHTML = `
+    <div class="acc-head"><b>アカウント</b><p>登録すると、スマホとパソコンで学習記録を共有できます。</p></div>
+    <div class="chips acc-tabs">
+      <button class="chip ${signup?'':'on'}" data-af="login">ログイン</button>
+      <button class="chip ${signup?'on':''}" data-af="signup">新規登録</button>
+    </div>
+    <form class="acc-form" id="accForm" novalidate>
+      <label>メールアドレス<input type="email" id="accEmail" autocomplete="email" maxlength="254" required></label>
+      <label>パスワード（8文字以上）<input type="password" id="accPw" autocomplete="${signup?'new-password':'current-password'}" minlength="8" maxlength="128" required></label>
+      ${signup?`
+      <label class="check"><input type="checkbox" id="accOshiraseNew"> 新しい教材やアプリのお知らせをメールで受け取る（任意）</label>
+      <div id="ts"></div>
+      <p class="acc-note">パスワードを忘れると再発行できません。忘れない言葉にするか、どこかに控えてください。<br>登録すると<a href="#privacy" id="privacyLink">個人情報の扱い</a>に同意したことになります。</p>`:''}
+      <div class="acc-msg" id="accMsg"></div>
+      <button class="btn" id="accSubmit">${signup?'登録する':'ログイン'}</button>
+    </form>`;
+  box.querySelectorAll('[data-af]').forEach(b=>b.addEventListener('click',()=>{ ACC.form=b.dataset.af; renderAcc(); }));
+  const pl=$('#privacyLink'); if(pl) pl.addEventListener('click',e=>{ e.preventDefault(); $('#privacy').scrollIntoView({behavior:'smooth'}); });
+  if(signup) renderTurnstile();
+  $('#accForm').addEventListener('submit',accSubmit);
+}
+
+/* ロボット対策（Turnstile）。表示されてから描く（罠帖 D-3） */
+function loadTurnstile(){
+  return new Promise((res,rej)=>{
+    if(window.turnstile) return res();
+    const s=document.createElement('script');
+    s.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+    s.onload=()=>res(); s.onerror=rej; document.head.appendChild(s);
+  });
+}
+async function renderTurnstile(){
+  ACC.ts=null;
+  try{ await loadTurnstile(); }catch(e){ const m=$('#accMsg'); if(m) m.textContent='✕ ロボット対策の部品を読み込めませんでした'; return; }
+  const el=$('#ts'); if(!el) return;
+  ACC.tsId = turnstile.render(el,{ sitekey:TS_SITEKEY, theme:'auto', callback:t=>{ ACC.ts=t; }, 'expired-callback':()=>{ ACC.ts=null; } });
+}
+
+async function accSubmit(e){
+  e.preventDefault();
+  const signup = ACC.form==='signup', msg=$('#accMsg'), btn=$('#accSubmit');
+  const email=$('#accEmail').value.trim(), password=$('#accPw').value;
+  msg.textContent='';
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ msg.textContent='✕ メールアドレスの形式をご確認ください'; return; }
+  if(password.length<8){ msg.textContent='✕ パスワードは8文字以上にしてください'; return; }
+  if(signup && !ACC.ts){ msg.textContent='✕ ロボット対策の確認が終わるまで、少しお待ちください'; return; }
+  btn.disabled=true; btn.textContent = signup ? '登録しています…' : 'ログインしています…';
+  let r;
+  try{
+    r = signup
+      ? await api('touroku','POST',{email, password, oshirase:$('#accOshiraseNew').checked, tsuukoushou:ACC.ts, data:S})
+      : await api('login','POST',{email, password});
+  }catch(err){ r={ok:false, j:{riyuu:'通信できませんでした。インターネット接続を確かめてください'}}; }
+  if(r.ok){
+    applyServer(r.j);
+    ACC.lastSync=new Date(); ACC.form='login';
+    renderAcc();
+    toast(signup ? '登録しました。記録をアカウントに保存しました' : 'ログインしました。記録をまとめました');
+  }else{
+    msg.textContent='✕ '+(r.j.riyuu||'うまくいきませんでした');
+    btn.disabled=false; btn.textContent = signup ? '登録する' : 'ログイン';
+    if(signup && window.turnstile && ACC.tsId!=null){ turnstile.reset(ACC.tsId); ACC.ts=null; }
+  }
+}
+
 applyTheme();
 renderHome();
+accInit();
 </script>
 </body>
 </html>
